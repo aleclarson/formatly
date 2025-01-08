@@ -35,7 +35,7 @@ See [Formatter Detection](#formatter-detection) for details on how they are dete
 npx formatly <files>
 ```
 
-`formatly` takes in any number of glob patterns
+`formatly` takes in any number of glob patterns.
 It will then:
 
 1. Detect which [supported formatter](#supported-formatters) is configured in the repository
