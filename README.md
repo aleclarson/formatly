@@ -20,15 +20,143 @@
 
 ## Usage
 
+`formatly` can automatically detect and format with:
+
+- [Biome](https://biomejs.dev/formatter)
+- [deno fmt](https://docs.deno.com/runtime/reference/cli/fmt)
+- [dprint](https://dprint.dev)
+- [Prettier](https://prettier.io)
+
+See [Formatter Detection](#formatter-detection) for details on how they are detected.
+
+### CLI
+
+```shell
+npx formatly <files>
+```
+
+`formatly` takes in any number of glob patterns
+It will then:
+
+1. Detect which [supported formatter](#supported-formatters) is configured in the repository
+2. Pass those glob patterns directly to the formatter
+
+For example, to match all directories and folders in the current directory:
+
+```shell
+npx formatly *
+```
+
+To match only `.ts` files in `src/`:
+
+```shell
+npx formatly "src/**/*.ts"
+```
+
+### Node.js API
+
 ```shell
 npm i formatly
 ```
 
-```ts
-import { greet } from "formatly";
+The `formatly` package exports the functions used by the `formatly` CLI.
 
-greet("Hello, world! 💖");
+#### `formatly`
+
+Runs formatting on any number of glob pattern `string`s.
+
+```ts
+import { formatly } from "formatly";
+
+await formatly(["*"]);
 ```
+
+Parameters:
+
+1. `patterns: string[]` _(required)_: any number of glob patterns
+2. `options: FormatlyOptions` _(optional)_:
+   - `cwd: string` _(optional)_: working directory, if not `"."`
+
+Resolves with a `FormatlyReport`, which is either:
+
+- `FormatlyReportError` if a formatter could not be determined, which an object containing:
+  - `ran: false`
+- `FormatlyReportResult` if a formatter could be determined, which is an object containing:
+  - `formatter: Formatter`: as resolved by [`resolveFormatter`](#resolveformatter)
+  - `ran: true`
+  - `result: Result`, the [`Result`](https://github.com/sindresorhus/execa/blob/main/docs/api.md#result) from running the formatter with [`execa`](https://github.com/sindresorhus/execa)
+
+For example, to run formatting on TypeScript source files in a child directory and check the result:
+
+```ts
+import { formatly } from "formatly";
+
+const report = await formatly(["src/**/*.ts"], { cwd: "path/to/project" });
+
+if (!report.ran) {
+	console.error("Could not determine formatter.");
+	return;
+}
+
+const { formatter, result } = report;
+
+if (result.code) {
+	console.error(`Error running ${formatter.runner}:`, result.stderr);
+} else {
+	console.log(`Formatted with ${formatter.name}! 🧼`);
+}
+```
+
+#### `resolveFormatter`
+
+Detects which of the [supported formatters](#supported-formatters) to use for a directory.
+
+```ts
+import { resolveFormatter } from "formatly";
+
+const formatter = await resolveFormatter();
+
+// {
+//   name: "Prettier",
+//   runner: "npx prettier --write",
+//   testers: { ... }
+// }
+console.log(formatter);
+```
+
+Parameters:
+
+1. `cwd: string` _(optional)_: working directory, if not `"."`
+
+Resolves with either:
+
+- `undefined` if a formatter could not be detected
+- `Formatter` if one can be found, which is an object containing:
+  - `name: string`: English name of the formatter
+  - `runner: string`: the shell command used to run the formatter
+  - `testers: object`: strings and regular expressions used to test for the formatter
+
+## Formatter Detection
+
+Formatters are detected based on the first match from, in order:
+
+1. Existence of the formatter's default supported config file name
+2. The formatter's name in a `package.json` `fmt` or `format` script
+3. Well-known root-level `package.json` key
+
+### Supported Formatters
+
+| Formatter                                                   | Config File                                                                                             | Package Key  | Script     |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------ | ---------- |
+| [Biome](https://biomejs.dev/formatter)                      | [Configure Biome](https://biomejs.dev/guides/configure-biome)                                           |              | `biome`    |
+| [deno fmt](https://docs.deno.com/runtime/reference/cli/fmt) | [Deno Configuration > Formatting](https://docs.deno.com/runtime/fundamentals/configuration/#formatting) |              | `deno`     |
+| [dprint](https://dprint.dev)                                | [dprint setup](https://dprint.dev/setup)                                                                |              | `dprint`   |
+| [Prettier](https://prettier.io)                             | [Prettier Configuration File](https://prettier.io/docs/en/configuration)                                | `"prettier"` | `prettier` |
+
+> Want support for a formatter not mentioned here?
+> Great!
+> Please [file a feature request GitHub issue](https://github.com/JoshuaKGoldberg/formatly/issues/new?assignees=&labels=type%3A+feature&projects=&template=03-feature.yml&title=%F0%9F%9A%80+Feature%3A+%3Cshort+description+of+the+feature%3E).
+> 🙏
 
 ## Development
 

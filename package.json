@@ -13,9 +13,11 @@
 	},
 	"type": "module",
 	"main": "./lib/index.js",
+	"bin": "bin/index.mjs",
 	"files": [
 		"LICENSE.md",
 		"README.md",
+		"bin/",
 		"lib/",
 		"package.json"
 	],
@@ -33,6 +35,10 @@
 	},
 	"lint-staged": {
 		"*": "prettier --ignore-unknown --write"
+	},
+	"dependencies": {
+		"execa": "^9.5.2",
+		"read-package-up": "^11.0.0"
 	},
 	"devDependencies": {
 		"@eslint-community/eslint-plugin-eslint-comments": "4.4.1",
