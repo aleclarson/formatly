@@ -1,0 +1,30 @@
+{
+	"dictionaries": ["npm", "node", "typescript"],
+	"ignorePaths": [
+		".all-contributorsrc",
+		".github",
+		"CHANGELOG.md",
+		"coverage",
+		"lib",
+		"node_modules",
+		"pnpm-lock.yaml"
+	],
+	"words": [
+		"access",
+		"apexskier",
+		"automerge",
+		"dependencies",
+		"devDependencies",
+		"directory",
+		"formatly",
+		"joshuakgoldberg",
+		"markdownlintignore",
+		"packageData",
+		"public",
+		"repository",
+		"scripts",
+		"title",
+		"tseslint",
+		"usage"
+	]
+}
