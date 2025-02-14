@@ -3,16 +3,17 @@ import * as fs from "node:fs/promises";
 import { Formatter, formatters } from "./formatters.js";
 import path from "node:path";
 
-export async function resolveFormatter(
-	cwd = ".",
-): Promise<Formatter | undefined> {
-	return escalade(cwd, async (dir, files) => {
+export async function resolveFormatter(cwd = "."): Promise<Formatter | null> {
+	const formatter = await escalade(cwd, async (dir, files) => {
+		let foundGitDirectory = false;
 		let getPackageData:
 			| (() => Promise<Record<string, unknown> | undefined>)
 			| undefined;
 
 		for (const file of files) {
-			if (file === "package.json") {
+			if (file === ".git") {
+				foundGitDirectory = true;
+			} else if (file === "package.json") {
 				getPackageData ??= () =>
 					fs
 						.readFile(path.join(dir, file), "utf8")
@@ -51,12 +52,17 @@ export async function resolveFormatter(
 				}
 			}
 		}
+
+		if (foundGitDirectory) {
+			return null;
+		}
 	});
+	return formatter ?? null;
 }
 
 type Promisable<T> = T | Promise<T>;
 
-async function escalade<T extends {}>(
+async function escalade<T extends {} | null>(
 	cwd: string,
 	callback: (dir: string, files: string[]) => Promisable<T | undefined | void>,
 ): Promise<T | undefined> {
