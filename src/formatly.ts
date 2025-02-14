@@ -59,6 +59,7 @@ export async function formatly<
 
 	const result = new Promise<SpawnResult>((resolve, reject) => {
 		const child = spawn(baseCommand, [...args, ...patterns], {
+			cwd: options.cwd,
 			stdio: options.stdio ?? "ignore",
 		});
 
