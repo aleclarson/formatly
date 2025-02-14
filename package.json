@@ -1,6 +1,6 @@
 {
 	"name": "@alloc/formatly",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Formats your code with whatever formatter your project is already using. 🧼",
 	"repository": {
 		"type": "git",
@@ -8,7 +8,9 @@
 	},
 	"license": "MIT",
 	"author": "Alec Larson",
-	"contributors": ["Joshua Goldberg"],
+	"contributors": [
+		"Joshua Goldberg"
+	],
 	"type": "module",
 	"main": "./lib/index.js",
 	"bin": "bin/index.mjs",
