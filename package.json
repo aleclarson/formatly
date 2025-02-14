@@ -1,25 +1,19 @@
 {
-	"name": "formatly",
+	"name": "@alloc/formatly",
 	"version": "0.1.0",
 	"description": "Formats your code with whatever formatter your project is already using. 🧼",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/JoshuaKGoldberg/formatly.git"
+		"url": "git+https://github.com/aleclarson/formatly.git"
 	},
 	"license": "MIT",
-	"author": {
-		"name": "Josh Goldberg ✨",
-		"email": "npm@joshuakgoldberg.com"
-	},
+	"author": "Alec Larson",
+	"contributors": ["Joshua Goldberg"],
 	"type": "module",
 	"main": "./lib/index.js",
 	"bin": "bin/index.mjs",
 	"files": [
-		"LICENSE.md",
-		"README.md",
-		"bin/",
-		"lib/",
-		"package.json"
+		"lib/"
 	],
 	"scripts": {
 		"build": "tsup",
@@ -73,8 +67,5 @@
 	},
 	"engines": {
 		"node": ">=18.3.0"
-	},
-	"publishConfig": {
-		"provenance": true
 	}
 }

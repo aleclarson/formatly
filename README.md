@@ -18,6 +18,9 @@
 	<img alt="💪 TypeScript: Strict" src="https://img.shields.io/badge/%F0%9F%92%AA_typescript-strict-21bb42.svg" />
 </p>
 
+> [!NOTE]
+> This is a fork of `formatly` with no dependencies. It also searches parent directories for formatter-specific config files, rather than only the current directory.
+
 ## Usage
 
 `formatly` can automatically detect and format with:
@@ -66,7 +69,7 @@ The `formatly` package exports the functions used by the `formatly` CLI.
 Runs formatting on any number of glob pattern `string`s.
 
 ```ts
-import { formatly } from "formatly";
+import { formatly } from "@alloc/formatly";
 
 await formatly(["*"]);
 ```
@@ -89,7 +92,7 @@ Resolves with a `FormatlyReport`, which is either:
 For example, to run formatting on TypeScript source files in a child directory and check the result:
 
 ```ts
-import { formatly } from "formatly";
+import { formatly } from "@alloc/formatly";
 
 const report = await formatly(["src/**/*.ts"], { cwd: "path/to/project" });
 
@@ -109,10 +112,10 @@ if (result.code) {
 
 #### `resolveFormatter`
 
-Detects which of the [supported formatters](#supported-formatters) to use for a directory.
+Detects which of the [supported formatters](#supported-formatters) to use for a directory. Parent directories are searched if necessary. The search ends when a directory with `.git` folder is encountered.
 
 ```ts
-import { resolveFormatter } from "formatly";
+import { resolveFormatter } from "@alloc/formatly";
 
 const formatter = await resolveFormatter();
 
